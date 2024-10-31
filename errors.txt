@@ -1,0 +1,2 @@
+Error! Name Ma10im does not consist only of letters
+Error! Name artyom with a small first letter
