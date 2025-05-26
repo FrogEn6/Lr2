@@ -1,2 +1,5 @@
-Error! Name Ma10im does not consist only of letters
-Error! Name artyom with a small first letter
+Wrong name: Daria
+Wrong name: Artem
+Wrong name: Maxim
+Wrong name: Artyom
+Wrong name: Ma10im
