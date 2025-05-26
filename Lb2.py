@@ -1,32 +1,47 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 import sys
-def with_file(arg: list[str]):
-    sys.stderr=open('errors.txt','w')
-    with open(arg[1],"r") as f:
-        for line in f:
-            string=line.strip()
-            if not string:
-                continue
-            if string[0].islower():
-                sys.stderr.write(f"Error! Name {string} with a small first letter\n")
-            elif not string.isalpha():
-                sys.stderr.write(f"Error! Name {string} does not consist only of letters\n")
+import re
+
+def validate_name(name):
+    return re.fullmatch(r'[a-z][a-zA-Z]*', name) is not None
+
+def from_file():
+    try:
+        with open('names.txt', 'r') as file:
+            names = file.read().splitlines()
+    except FileNotFoundError:
+        print("The file names.txt not found.")
+        return
+
+    errors = []
+    for name in names:
+        if validate_name(name):
+            print(f"Hello, {name}!")
+        else:
+            errors.append(f"Wrong name: {name}")
+
+    if errors:
+        with open('error.txt', 'w') as error_file:
+            for error in errors:
+                error_file.write(error + '\n')
+
+def interactive():
+    print("Enter the names one at a time. To exit, press Ctrl+C.")
+    try:
+        while True:
+            name = input("Enter a name: ").strip()
+            if validate_name(name):
+                print(f"Hello, {name}!")
             else:
-                print(f"Hi, {string}!")
-def without_file():
-   try:
-       while True:
-           A=input("Hello! What is your name? ")
-           if A[0].islower():
-               print(f"Name {A} with a small first letter")
-           elif not A.isalpha():
-               print(f"Name {A} does not consist only of letters")
-           else:
-               print(f"Nice to see you, {A}!")
-   except KeyboardInterrupt:
+                print(f"Error: The name '{name}' contains invalid characters or does not start with a lowercase letter.")
+    except KeyboardInterrupt:
         print("\nGoodbye!")
-if len(sys.argv)>1:
-    namefile=sys.argv
-    with_file(namefile)
-else:
-    without_file()
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] == 'interactive':
+        interactive()
+    else:
+        from_file()
+
+if __name__ == "__main__":
+    main()
